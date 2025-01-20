@@ -14,7 +14,10 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\OpenApi\Model\Response;
 use Illuminate\Database\Eloquent\Model;
+use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\RequestBody;
 use App\Http\Controllers\AdditifController;
 
 #[ApiResource(
@@ -28,8 +31,50 @@ use App\Http\Controllers\AdditifController;
         new Post(
             uriTemplate: '/additifs/somme_toxicite',
             controller: AdditifController::class,
-            name: 'somme_toxicite',
+            openapi: new Operation(
+                summary: 'Make the sum of toxicite',
+                responses: [
+                    '200' => new Response(
+                        description: 'Ok',
+                    content: new \ArrayObject([
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'Résultat de l\'addition des points de toxicité' => [
+                                        'type' => 'integer',
+                                    ],
+                                ],
+                            ],
+                            'example' => [
+                                'Résultat de l\'addition des points de toxicité' => 15,
+                            ],
+                        ]
+                    ])),
+                    '201' => new Response(
+                        description: 'Success'),
+                ],
+                description: '##  Make the sum of toxicite',
+                requestBody: new RequestBody(
+                    content: new \ArrayObject([
+                        'application/json' => [
+                            'schema' => [
+                                'description' => 'the sum of toxicite',
+                                'type' => 'object',
+                                'properties' => [
+                                    'idAdditif' => [
+                                        'type' => 'array',
+                                    ],
+                                ],
+                            ],
+                            'example' => [
+                                'idAdditif' => [1, 630, 499],
+                            ],
+                        ]
+                    ])
+                ),
             )
+        ),
     ]
 )]
 /**
